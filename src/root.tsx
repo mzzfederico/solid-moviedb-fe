@@ -28,7 +28,6 @@ export default function Root() {
             <A class="mr-2" href="/">
               Index
             </A>
-            <A href="/about">About</A>
             <Routes>
               <FileRoutes />
             </Routes>
