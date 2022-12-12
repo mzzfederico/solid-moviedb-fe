@@ -9,7 +9,7 @@ export default function CoverMovie(props: { movie: Movie}) {
         <li
           class={`block aspect-w-9 aspect-h-15 rounded-md`}
           style={`background-image: url(${SMALL_IMAGE_PRE}/${movie.poster_path})`}>
-          <A href={`/movie/${movie.id}`}>
+          <A href={`/movie/${movie.id}`} class='opacity-0'>
             {movie.title}
           </A>
         </li>
