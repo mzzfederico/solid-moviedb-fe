@@ -8,38 +8,65 @@ import {
 } from "../../stores/favorites";
 import { Movie } from "../../types/Movie";
 
-export function routeData({ params }: RouteDataArgs): Resource<Movie> {
-    const options = { key: () => ['movies', params.id] };
+type RouteResources = {
+    movie: Movie, credits: Object
+};
+
+export function routeData({ params }: RouteDataArgs): Resource<RouteResources> {
+    const options = { key: () => ['movie_id', params.id] };
     return createServerData$(async ([, id]) => {
-        const res = await fetch(`${API_GATEWAY}/movie/${id}?api_key=${import.meta.env.VITE_TMDB_API_KEY}`);
-        const movie = await res.json() as Movie;
-        return movie;
+        const [movie, credits] = await Promise.all([
+            fetchMovie(id),
+            fetchMovieCredits(id)
+        ]);
+        return { movie, credits };
     }, options);
 }
 
 export default function MovieRoute() {
-    const movie = useRouteData<typeof routeData>();
+    const resources = useRouteData<typeof routeData>();
 
     return (
         <article class="container grid grid-cols-2">
             <section class="flex justify-center">
                 <div class="flex justify-center items-center align-items-center h-screen sticky top-0">
-                    <img class={`w-fit h-fit`} src={`${LARGE_IMAGE_PRE}${movie()?.poster_path}`} alt={movie()?.title} />
+                    <img class={`w-fit h-fit`} src={`${LARGE_IMAGE_PRE}${resources()?.movie?.poster_path}`} alt={resources()?.movie?.title} />
                 </div>
             </section>
             <section class="flex flex-col ml-5">
-                <Heading lvl={1}>{movie()?.title}</Heading>
-                <Heading lvl={2} class="italic">{movie()?.original_title}</Heading>
+                <div class="mb-16 flex flex-col">
+                    <Heading lvl={1}>{resources()?.movie?.title}</Heading>
+                    <Heading lvl={2} class="italic">{resources()?.movie?.original_title}</Heading>
+                </div>
 
-                <div class="h-10"></div>
+                <div class="mb-16">
+                    <p>{resources()?.movie?.overview}</p>
 
-                <p>{movie()?.overview}</p>
+                    <div class="my-4">
+                        <button class="btn border-neutral-300 border-solid border-2 p-2" onClick={() => addFavorite(resources()?.movie)}>Add to favorites</button>
+                    </div>
+                </div>
 
-                <div class="h-10"></div>
+                <ul class="mb-16">
+                    <For each={resources()?.credits.cast.slice(0, 12)}>
+                        {entry => <li>{entry.name}: <em>{entry.character}</em></li>}
+                    </For>
+                </ul>
 
-                <pre>{JSON.stringify(movie(), null, 4)}</pre>
-                <button onClick={() => addFavorite(movie())}>Add to favorites</button>
+                <pre>{JSON.stringify(resources()?.movie, null, 4)}</pre>
             </section>
         </article>
     )
+}
+
+async function fetchMovie(movieId: string): Promise<Movie> {
+    const res = await fetch(`${API_GATEWAY}/movie/${movieId}?api_key=${import.meta.env.VITE_TMDB_API_KEY}`);
+    const movie = await res.json() as Movie;
+    return movie;
+}
+
+async function fetchMovieCredits(movieId: string): Promise<Object> {
+    const res = await fetch(`${API_GATEWAY}/movie/${movieId}/credits?api_key=${import.meta.env.VITE_TMDB_API_KEY}`);
+    const movie = await res.json() as Movie;
+    return movie;
 }

@@ -1,6 +1,6 @@
 export default function CoverGrid({ children }) {
     return (
-        <ul class="grid grid-flow-row grid-cols-6 gap-4 justify-start">
+        <ul class="flex flex-grow flex-wrap justify-start">
             {children}
         </ul>
     )

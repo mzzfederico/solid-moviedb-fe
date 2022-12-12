@@ -5,7 +5,6 @@ import CoverGrid from "../components/Covers/Grid";
 import CoverMovie from "../components/Covers/Movie";
 import { Heading } from "../components/Type";
 import { API_GATEWAY } from "../constants";
-import { list } from "../stores/favorites";
 import { ResultsResponse } from "../types/ResultsResponse";
 
 export function routeData() {
@@ -24,13 +23,6 @@ export default function Home() {
       <Heading lvl={2} class="block mb-5">Populars</Heading>
       <CoverGrid>
         <For each={movies()}>
-          {el => <CoverMovie movie={el} />}
-        </For>
-      </CoverGrid>
-
-      <Heading lvl={2} class="block mb-5">Favs</Heading>
-      <CoverGrid>
-        <For each={list}>
           {el => <CoverMovie movie={el} />}
         </For>
       </CoverGrid>
