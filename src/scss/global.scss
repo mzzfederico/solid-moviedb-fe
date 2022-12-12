@@ -1,0 +1,11 @@
+@import "_variables.scss";
+
+body {
+    margin: 0 auto;
+    background-color: $background;
+    color: $secondary;
+}
+
+.background-fill {
+    background-color: $background;
+}

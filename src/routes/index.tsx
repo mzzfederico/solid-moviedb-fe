@@ -1,11 +1,12 @@
-import { createEffect, createResource, For } from "solid-js";
-import { A, useRouteData } from "solid-start";
+import { For } from "solid-js";
+import { useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
-import { API_GATEWAY, IMAGE_PREFIX } from "../constants";
-import { Movie } from "../types/Movie";
+import CoverGrid from "../components/Covers/Grid";
+import CoverMovie from "../components/Covers/Movie";
+import { Heading } from "../components/Type";
+import { API_GATEWAY } from "../constants";
+import { list } from "../stores/favorites";
 import { ResultsResponse } from "../types/ResultsResponse";
-
-import styles from './index.module.scss';
 
 export function routeData() {
   return createServerData$(async () => {
@@ -19,20 +20,20 @@ export default function Home() {
   const movies = useRouteData<typeof routeData>();
 
   return (
-    <main class="text-center mx-auto text-gray-700 p-4">
-      <ul class="grid grid-flow-row grid-cols-6 gap-4 justify-start">
+    <main class="container mx-auto text-gray-700 p-4">
+      <Heading lvl={2} class="block mb-5">Populars</Heading>
+      <CoverGrid>
         <For each={movies()}>
-          {movie => (
-            <li
-              class={`${styles.MovieCover} block aspect-w-9 aspect-h-15 rounded-md`}
-              style={`background-image: url(${IMAGE_PREFIX}/${movie.poster_path})`}>
-              <A href={`/movie/${movie.id}`}>
-                {movie.title}
-              </A>
-            </li>
-          )}
+          {el => <CoverMovie movie={el} />}
         </For>
-      </ul>
+      </CoverGrid>
+
+      <Heading lvl={2} class="block mb-5">Favs</Heading>
+      <CoverGrid>
+        <For each={list}>
+          {el => <CoverMovie movie={el} />}
+        </For>
+      </CoverGrid>
     </main>
   );
 }

@@ -12,22 +12,23 @@ import {
   Scripts,
   Title,
 } from "solid-start";
+import Header from "./containers/Header";
 import "./root.css";
+
+import "./scss/global.scss";
 
 export default function Root() {
   return (
     <Html lang="en">
       <Head>
-        <Title>SolidStart - With TailwindCSS</Title>
+        <Title>SolidJS w/ Tailwind w/ TMDB</Title>
         <Meta charset="utf-8" />
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <Body>
+      <Body class="pt-16">
         <Suspense>
           <ErrorBoundary>
-            <A class="mr-2" href="/">
-              Index
-            </A>
+            <Header />
             <Routes>
               <FileRoutes />
             </Routes>
