@@ -2,14 +2,15 @@ import { For, Resource } from "solid-js";
 import { RouteDataArgs, useParams, useRouteData } from "solid-start"
 import { createServerData$ } from "solid-start/server";
 import { Heading } from "../../components/Type";
-import { API_GATEWAY, IMAGE_PREFIX, LARGE_IMAGE_PRE } from "../../constants";
+import { API_GATEWAY, LARGE_IMAGE_PRE } from "../../constants";
 import {
     list as favorites, addFavorite
 } from "../../stores/favorites";
 import { Movie } from "../../types/Movie";
+import { MovieCredits } from "../../types/MovieCredits";
 
 type RouteResources = {
-    movie: Movie, credits: Object
+    movie: Movie, credits: MovieCredits
 };
 
 export function routeData({ params }: RouteDataArgs): Resource<RouteResources> {
@@ -19,7 +20,7 @@ export function routeData({ params }: RouteDataArgs): Resource<RouteResources> {
             fetchMovie(id),
             fetchMovieCredits(id)
         ]);
-        return { movie, credits };
+        return { movie, credits } as RouteResources;
     }, options);
 }
 
@@ -34,7 +35,7 @@ export default function MovieRoute() {
                 </div>
             </section>
             <section class="flex flex-col ml-5">
-                <div class="mb-16 flex flex-col">
+                <div class="my-16 flex flex-col">
                     <Heading lvl={1}>{resources()?.movie?.title}</Heading>
                     <Heading lvl={2} class="italic">{resources()?.movie?.original_title}</Heading>
                 </div>

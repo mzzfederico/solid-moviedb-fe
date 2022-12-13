@@ -1,6 +1,6 @@
 import { For } from "solid-js";
 import CoverGrid from "../components/Covers/Grid";
-import CoverMovie from "../components/Covers/Movie";
+import CoverMovie from "../components/Covers/CoverLink";
 import { Heading } from "../components/Type";
 import { list as favoritesList } from "../stores/favorites";
 
